@@ -1,18 +1,19 @@
 {
-	"name": "cucumberquick",
-	"displayName": "Cucumber Quick",
-	"description": "Cucumber Quick - a quick cucumber executer",
+	"name": "sonkcucumberquick",
+	"displayName": "Sonk Cucumber Quick",
+	"description": "Sonk Cucumber Quick - a quick cucumber executer",
 	"version": "2.2.0",
-	"publisher": "AbhinabaGhosh",
+	"publisher": "IsaacJaynes",
 	"engines": {
 		"vscode": "^1.44.0"
 	},
 	"categories": [
 		"Programming Languages"
 	],
-	"author": "Abhinaba Ghosh",
+	"author": "Isaac Jaynes",
 	"icon": "media/icon.png",
 	"activationEvents": [
+		"onLanguage:feature",
 		"onCommand:execute.scenario",
 		"onCommand:execute.feature"
 	],
@@ -31,13 +32,21 @@
 		"menus": {
 			"editor/context": [
 				{
-					"command": "execute.scenario"
+					"command": "execute.scenario",
+					"when": "editorLangId == feature"
 				},
 				{
-					"command": "execute.feature"
+					"command": "execute.feature",
+					"when": "editorLangId == feature"
 				}
 			]
-		}
+		},
+		"codeLens": [
+			{
+				"language": "feature",
+				"pattern": "**/*.feature"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

@@ -1,14 +1,15 @@
 import * as vscode from 'vscode';
 import {
-	getCucumberQuickObject,
+	getSonkCucumberQuickObject,
 	createCommandToExecuteFeature,
 	executeCucumberQuickCommand,
 	createCommandToExecuteScenario,
 	getScenarioName,
-	getCucumberQuickScript,
-	getCucumberQuickTool,
+	getSonkCucumberQuickScript,
 } from './utils';
 import { killActiveProcess } from './executeCommand';
+import { ScenarioCodeLensProvider } from './scenarioCodeLensProvider';
+import { FeatureCodeLensProvider } from './featureCodeLensProvider';
 
 export let commandOutput: vscode.OutputChannel | null = null;
 
@@ -17,28 +18,39 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(commandOutput);
 	context.subscriptions.push(runScenarioDisposable);
 	context.subscriptions.push(runFeatureDisposable);
+	context.subscriptions.push(
+		vscode.languages.registerCodeLensProvider(
+			{ language: 'feature', scheme: 'file', pattern: '**/*.feature' },
+			new ScenarioCodeLensProvider()
+		)
+	);
+	context.subscriptions.push(
+		vscode.languages.registerCodeLensProvider(
+			{ language: 'feature', scheme: 'file', pattern: '**/*.feature' },
+			new FeatureCodeLensProvider()
+		)
+	);
 }
 
 const runScenarioDisposable = vscode.commands.registerCommand('execute.scenario', () => {
-	const cucumberQuickObject = getCucumberQuickObject();
-	const cucumberQuickScript: string = getCucumberQuickScript(cucumberQuickObject);
+	const sonkCucumberQuickObject = getSonkCucumberQuickObject();
+	const sonkCucumberQuickScript: string = getSonkCucumberQuickScript(sonkCucumberQuickObject);
 	const currentScenarioName: string = getScenarioName();
-	const toolUsed: string = getCucumberQuickTool(cucumberQuickObject);
-	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName, toolUsed);
+	const featureCommand: string = createCommandToExecuteFeature();
+	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
 	if (commandOutput) {
-		executeCucumberQuickCommand(cucumberQuickScript, scenarioCommand, toolUsed);
+		executeCucumberQuickCommand(sonkCucumberQuickScript, featureCommand + " " + scenarioCommand);
 	} else {
 		logErrorIfOutputNotDefined();
 	}
 });
 
 const runFeatureDisposable = vscode.commands.registerCommand('execute.feature', () => {
-	const cucumberQuickObject = getCucumberQuickObject();
-	const cucumberQuickScript: string = getCucumberQuickScript(cucumberQuickObject);
-	const featureCommand: string = createCommandToExecuteFeature(cucumberQuickObject);
-	const toolUsed: string = getCucumberQuickTool(cucumberQuickObject);
+	const sonkCucumberQuickObject = getSonkCucumberQuickObject();
+	const sonkCucumberQuickScript: string = getSonkCucumberQuickScript(sonkCucumberQuickObject);
+	const featureCommand: string = createCommandToExecuteFeature();
 	if (commandOutput) {
-		executeCucumberQuickCommand(cucumberQuickScript, featureCommand, toolUsed);
+		executeCucumberQuickCommand(sonkCucumberQuickScript, featureCommand);
 	} else {
 		logErrorIfOutputNotDefined();
 	}
@@ -46,7 +58,7 @@ const runFeatureDisposable = vscode.commands.registerCommand('execute.feature', 
 
 const logErrorIfOutputNotDefined = () => {
 	vscode.window.showErrorMessage(
-		`vs code output terminal not defined. Please ensure all required configuration. If npt solved, raise an issue here: https://github.com/abhinaba-ghosh/cucumber-quick/issues`
+		`vs code output terminal not defined. Please ensure all required configuration. If npt solved, raise an issue here: https://github.com/isaac-jaynes-imperva/sonk-cucumber-quick/issues`
 	);
 	throw new Error('vs code output terminal not defined. Please ensure all required configuration.');
 };
