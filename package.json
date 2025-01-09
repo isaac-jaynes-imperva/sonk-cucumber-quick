@@ -7,15 +7,17 @@
 	"engines": {
 		"vscode": "^1.44.0"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/isaac-jaynes-imperva/sonk-cucumber-quick"
+	},
 	"categories": [
 		"Programming Languages"
 	],
 	"author": "Isaac Jaynes",
 	"icon": "media/icon.png",
 	"activationEvents": [
-		"onLanguage:feature",
-		"onCommand:execute.scenario",
-		"onCommand:execute.feature"
+		"onLanguage:feature"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -46,11 +48,22 @@
 				"language": "feature",
 				"pattern": "**/*.feature"
 			}
-		]
+		],
+		"configuration": {
+			"title": "Sonk Cucumber Quick",
+			"properties": {
+				"sonk-cucumber-quick.script": {
+					"type": "string",
+					"default": "",
+					"description": "The script to execute when running a feature or scenario"
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
+		"package": "vsce package",
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
@@ -68,6 +81,7 @@
 		"eslint": "^6.8.0",
 		"@typescript-eslint/parser": "^2.26.0",
 		"@typescript-eslint/eslint-plugin": "^2.26.0",
+		"@vscode/vsce": "^2.26.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.1",
 		"typescript": "^3.8.3",
