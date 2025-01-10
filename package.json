@@ -1,5 +1,5 @@
 {
-	"name": "sonkcucumberquick",
+	"name": "sonk-cucumber-quick",
 	"displayName": "Sonk Cucumber Quick",
 	"description": "Sonk Cucumber Quick - a quick cucumber executer",
 	"version": "2.2.0",
@@ -52,10 +52,16 @@
 		"configuration": {
 			"title": "Sonk Cucumber Quick",
 			"properties": {
-				"sonk-cucumber-quick.script": {
-					"type": "string",
-					"default": "",
-					"description": "The script to execute when running a feature or scenario"
+				"sonk-cucumber-quick": {
+					"type": "object",
+					"description": "Sonk Cucumber Quick configuration",
+					"properties": {
+						"sonk-cucumber-quick.script": {
+							"type": "string",
+							"default": "",
+							"description": "The script to execute when running a feature or scenario"
+						}
+					}
 				}
 			}
 		}

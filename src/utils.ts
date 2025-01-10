@@ -13,7 +13,6 @@ interface SonkCucumberQuickConfiguration {
  */
 export const getSonkCucumberQuickObject = (): SonkCucumberQuickConfiguration => {
 	let quickConfiguration: SonkCucumberQuickConfiguration;
-	console.log('workspaceFolder:', vscode.workspace.getWorkspaceFolder(workspaceFolder));
 	try {
 		quickConfiguration = JSON.parse(
 			fs.readFileSync(
@@ -22,8 +21,8 @@ export const getSonkCucumberQuickObject = (): SonkCucumberQuickConfiguration => 
 			)
 		)['sonk-cucumber-quick'];
 	} catch (err) {
-		vscode.window.showErrorMessage('unable to read sonk-cucumber-quick configuration', err);
-		throw new Error(err);
+		vscode.window.showErrorMessage('unable to read sonk-cucumber-quick configuration '+ (err as any).message);
+		throw new Error(err as any);
 	}
 
 	if (quickConfiguration) {
@@ -63,11 +62,10 @@ const getActiveTerminal = () => {
  * This method helps to determine if the selected text is a valid scenario name
  * This method will throw error if user selects any line except Scenario or Scenario outline
  */
-export const getScenarioName = () => {
+export const getScenarioName = (codeLensLine?: number) => {
 	const selectedLine: string | undefined = vscode.window.activeTextEditor?.document.lineAt(
-		vscode.window.activeTextEditor.selection.active.line
+		codeLensLine ? codeLensLine : vscode.window.activeTextEditor.selection.active.line
 	).text;
-	console.log('selectedLine:', selectedLine);
 
 	if (selectedLine?.includes('Scenario')) {
 		return selectedLine

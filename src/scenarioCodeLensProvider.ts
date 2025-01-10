@@ -18,7 +18,7 @@ export class ScenarioCodeLensProvider implements vscode.CodeLensProvider {
                     new vscode.CodeLens(range, {
                         title: '▶️ Run Scenario',
                         command: 'execute.scenario',
-                        arguments: [matches[1]]
+                        arguments: [i, matches[1]]
                     })
                 );
             }

@@ -14,7 +14,7 @@ import { FeatureCodeLensProvider } from './featureCodeLensProvider';
 export let commandOutput: vscode.OutputChannel | null = null;
 
 export function activate(context: vscode.ExtensionContext) {
-	commandOutput = vscode.window.createOutputChannel('CucumberQuickRunnerLog');
+	commandOutput = vscode.window.createOutputChannel('Sonk Cucumber runner plugin');
 	context.subscriptions.push(commandOutput);
 	context.subscriptions.push(runScenarioDisposable);
 	context.subscriptions.push(runFeatureDisposable);
@@ -32,10 +32,10 @@ export function activate(context: vscode.ExtensionContext) {
 	);
 }
 
-const runScenarioDisposable = vscode.commands.registerCommand('execute.scenario', () => {
+const runScenarioDisposable = vscode.commands.registerCommand('execute.scenario', (codeLensLine?: number) => {
 	const sonkCucumberQuickObject = getSonkCucumberQuickObject();
 	const sonkCucumberQuickScript: string = getSonkCucumberQuickScript(sonkCucumberQuickObject);
-	const currentScenarioName: string = getScenarioName();
+	const currentScenarioName: string = getScenarioName(codeLensLine);
 	const featureCommand: string = createCommandToExecuteFeature();
 	const scenarioCommand: string = createCommandToExecuteScenario(currentScenarioName);
 	if (commandOutput) {
